@@ -1,0 +1,39 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Chatbot</title>
+</head>
+
+<body>
+    <h1>Chatbot Service</h1>
+    <div id="chat-container">
+        <div id="chatlog"></div>
+        <input type="text" id="user-input" placeholder="Type your message...">
+        <button onclick="sendMessage()">Send</button>
+    </div>
+
+    <script>
+        function sendMessage() {
+            var userInput = document.getElementById("user-input").value;
+            document.getElementById("user-input").value = "";
+
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "/chatbot", true);
+            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === XMLHttpRequest.DONE) {
+                    if (xhr.status === 200) {
+                        var response = xhr.responseText;
+                        document.getElementById("chatlog").innerHTML += "<p><strong>You:</strong> " + userInput + "</p>";
+                        document.getElementById("chatlog").innerHTML += "<p><strong>Chatbot:</strong> " + response + "</p>";
+                    }
+                }
+            };
+            xhr.send("user_input=" + userInput);
+        }
+    </script>
+
+</body>
+
+</html> -->

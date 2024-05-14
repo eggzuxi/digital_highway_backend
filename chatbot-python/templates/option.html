@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chatbot</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+</head>
+<body>
+    <select id="user-choice">
+      <option value="">선택하세요...</option>
+      <option value="option1">디지털 지름길은 어떤 서비스인가요?</option>
+      <option value="option2">디지털 지름길이 제공하는 서비스는 어떤 것이 있나요?</option>
+      <option value="option3">정보제공 서비스는 무엇인가요?</option>
+    </select>
+    <button onclick="sendChoice()">선택</button>
+
+    <script>
+        function sendChoice() {
+            var selectedOption = document.getElementById("user-choice").value;
+            if (selectedOption === "") return;
+
+            $.ajax({
+                type: "POST",
+                url: "/chatbot",
+                data: { user_choice: selectedOption },
+                success: function(response) {
+                    var chatLog = document.getElementById("chat-log");
+                    chatLog.innerHTML = ''; // 기존 채팅 로그 초기화
+
+                    // 선택한 질문과 챗봇의 답변을 출력
+                    chatLog.innerHTML += '<p><strong>사용자:</strong> ' + selectedOption + '</p>';
+                    chatLog.innerHTML += '<p><strong>챗봇:</strong> ' + response.response + '</p>';
+                    
+                    chatLog.innerHTML = response.response; // 질문 입력시 답변 새로 출력
+                    document.getElementById("user-choice").value = ""; // 선택 초기화
+                },
+                error: function(err) {
+                    console.error("Error:", err);
+                }
+            });
+        }   
+    </script>  
+</body>
+</html>

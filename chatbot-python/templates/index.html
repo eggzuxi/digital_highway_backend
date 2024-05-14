@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Chatbot</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+    <h1>Chatbot</h1>
+    <div id="chat-container">
+        <div id="chat-log"></div>
+        <input type="text" id="user-input" placeholder="질문을 입력하세요...">
+        <button onclick="sendMessage()">전송</button>
+    </div>
+
+    <script>
+        function sendMessage() {
+            var userInput = document.getElementById("user-input").value;
+            if (userInput.trim() === "") return;
+
+            $.ajax({
+                type: "POST",
+                url: "/chatbot",
+                data: { user_question: userInput },
+                success: function(response) {
+                    var chatLog = document.getElementById("chat-log");
+                    // chatLog.innerHTML += '<p><strong>사용자:</strong> ' + userInput + '</p>';
+                    // chatLog.innerHTML += '<p><strong>챗봇:</strong> ' + response.response + '</p>';
+                    
+                    // chatLog.innerHTML += response.response;
+                    chatLog.innerHTML = response.response; // 질문 입력시 답변 새로 출력
+                    document.getElementById("user-input").value = "";
+                },
+                error: function(err) {
+                    console.error("Error:", err);
+                }
+            });
+        }
+    </script>
+</body>
+</html>
