@@ -1,0 +1,106 @@
+.post-section{
+    margin-top: 20px;
+    width: 80vw;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.post-section h1{
+    font-size: 35px;
+}
+
+.post-section span{
+    color: rgb(130, 128, 128);
+}
+
+.post-date{
+    font-size: 14px;
+}
+
+.reco-area {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+.button-form {
+    display: inline-block; 
+    margin-right: 10px; 
+}
+
+.image-button {
+    width: 50px; /* 버튼 이미지의 너비 */
+    height: 50px; /* 버튼 이미지의 높이 */
+}
+
+.up-reco, .down-reco{
+    margin: 5px 0;
+}
+
+.reco-container {
+    display: flex;
+    justify-content: space-between;
+    width: 100%; /* 부모 컨테이너의 너비를 기준으로 좌우 정렬 */
+}
+
+.image-button {
+    margin-left: 10px; /* 이미지 버튼과 텍스트 사이의 간격 조정 */
+}
+
+.comment-section {
+    margin-top: 20px;
+    width: 80vw;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 20px;
+}
+
+.comment-section li{
+    list-style: none;
+    margin: 8px 8px;
+}
+
+.comment-input textarea{
+    width: 100%;
+    height: 50px;
+    margin-bottom: 10px;
+}
+
+.updateBtnWrapper{
+    width: 100%;
+    display: grid;
+    text-align: center;
+    grid-template-columns:1fr 1fr;
+    justify-content: center;
+}
+.updateBtn{
+    text-decoration: none;
+}
+.updateBtnWrapper a:link, a:visited {
+    background-color: #f7f1e3;
+    color: black;
+    padding: 15px 25px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    border: 1px solid;
+}
+.updateBtnWrapper > form {
+    background-color: #f7f1e3;
+    color:black;
+    padding: 15px 25px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    border: 1px solid;
+}
+.updateBtnWrapper > form > input{
+    background-color: #f7f1e3;
+    color: black;
+    padding: 0;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    border: none;
+}

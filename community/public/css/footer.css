@@ -1,0 +1,88 @@
+footer{
+    position: inherit;
+    bottom: 0px;
+    width: 100%;
+}
+.footer{
+    background-color: #f7f1e3;
+}
+
+.footer-container {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    padding: 15px;
+    text-align: center;
+    /* background-color: #f7f1e3; */
+}
+
+.footer-list{
+    display: flex;
+    box-sizing: border-box;
+    flex-wrap: wrap;
+    justify-content: center;
+    list-style-type: none;
+    position: relative;
+    padding-left: 0;
+}
+
+.footer a.link{
+    color: black;
+    display: inline-block;
+    margin-bottom: 0;
+    padding: 8px 12px;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+
+.footer-text{
+    display: inline-block;
+    width: 100%;
+    text-align: center;
+    align-items: center;
+    font-size: 14px;
+}
+
+.footer-list-item{
+    display: flex;
+    align-items: center;
+}
+
+.footer-list-item a span{
+    font-size: 15px;
+}
+
+#darkModeToggle{
+    font-size: 15px;
+    cursor: pointer;
+    background-color: transparent;
+    border: none;
+}
+
+/* 다크 모드 스타일 */
+.dark-mode .footer {
+    background-color: #333; /* 배경색 변경 */
+    color: #fff; /* 텍스트 색상 변경 */
+}
+
+.dark-mode .footer-list-item a.link {
+    color: #fff; 
+} /* 링크 색상 변경 */
+
+.dark-mode .footer-list-item button{
+    color: #fff; 
+}
+
+.dark-mode .footer-text {
+    color: #fff;
+} /* 푸터 텍스트 색상 변경 */
+
+
+
+@media (max-width: 426px){
+    .footer-text{
+        text-decoration: none;
+        font-size: 12px;
+    } 
+}

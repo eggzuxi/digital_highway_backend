@@ -1,0 +1,37 @@
+<%- include('./include/header') %>
+  <body>
+    <main>
+      <link rel="stylesheet" href="/css/addPost.css">
+      <div class="wrapper"> 
+        
+        <form action="/main/addPost" method="POST" enctype="multipart/form-data">
+          <h4 style="display: flex; justify-content: center; margin-top: 20px; margin-bottom: 10px;">제목을 입력하세요</h4>
+          <div class="addPostTitle">
+            <input
+              type="text"
+              required
+              placeholder="Post 'title' here"
+              name="title"
+              class="titleInput"
+            />
+          </div>
+          <h4 style="display: flex; justify-content: center; margin-top: 10px; margin-bottom: 10px;" >본문을 입력하세요</h4>
+          <div class="addPostContest">
+            <textarea
+              required
+              placeholder="Post 'mainText' here"
+              name="mainText"
+              class="contentInput"
+            ></textarea>
+          </div>
+          <h4 style="display: flex; justify-content: center; margin-top: 10px; margin-bottom: 10px;" >이미지 추가</h4>
+          <div class = "submitWrapper">
+            <input id="image" name="image" type="file" accept="image/*" class="imgInput" />
+            <input type="submit" value="Add post" class="submitBtn"/>
+          </div>
+        </form>
+      </div>
+    </main>
+  </body>
+  <script src="/js/toggleDarkMode.js"></script>
+  <%- include('./include/footer') %>

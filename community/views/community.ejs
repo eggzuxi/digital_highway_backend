@@ -1,0 +1,51 @@
+<%- include('./include/header') %>
+<body>
+
+  <main>
+    <link rel="stylesheet" href="/css/main.css">
+    <section class="main_container" style="min-height: 400px;">
+      <table class="gall_list">
+        <caption>글 목록 </caption>
+        <colgroup>
+            <col style="width:7%">
+            <col style="width:3.1875rem">
+            <col>
+            <col style="width:18%">
+            <col style="width:6%">
+            <col style="width:6%">
+        </colgroup>
+        <thead>
+            <tr>
+                <th scope="col">번호</th>
+                <th scope="col">말머리</th>
+                <th scope="col">제목</th>
+                <th scope="col">작성일</th>
+                <th scope="col">조회</th>
+                <th scope="col">추천</th>
+            </tr>
+        </thead>
+        <tbody class = "listwrap2">
+            <tr class ="ub-content">
+                <%let count = 1; %>
+                <% posts.forEach((post) => { %>
+                <td class="gall_num" style="height: 25px;"><%=count++%></td>
+                <td class="gall_subject">일반</td>
+                <td class="gall_tit ub-word">
+                    <a href="main/<%=post._id%>" view-msg>
+                        <%=post.title %>
+                    </a>    
+                </td>
+                
+                <td class="gapp_date"> <%=new Date(post.createdAt).toLocaleDateString("ko-kr", {weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'}) %></td>
+                <td class="gall_count"> <%=post.views%></td>
+                <td class="gall_recommend"> <%=post.ups %></td>
+            </tr>
+            <% }) %>
+        </tbody>
+    </table>
+    </sectionv>
+
+</main>
+</body>
+<script src="/js/toggleDarkMode.js"></script>
+<%- include('./include/footer') %>

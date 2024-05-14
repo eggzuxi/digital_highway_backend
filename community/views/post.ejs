@@ -1,0 +1,112 @@
+<%- include('./include/header') %>
+<body style="margin-top: 150px">
+    <link rel="stylesheet" href="/css/postview.css">
+    <link rel="stylesheet" href="/css/main.css">
+    <div class="post-section">
+        <h1><%=post.postTitle%></h1>
+        <span class="post-date">작성일 <%=new Date(post.createdAt).toLocaleDateString("ko-kr", {weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'}) %></span>
+        <br>
+        <span>조회수 <%=post.views%></span>
+        <span>추천수 <%=post.ups %></span>
+        <hr/>
+        <img src="<%=post.imageUrl%>" />
+        <p><%=post.mainText%></p>
+            <% if(post.writer.toString() === userId) { %>
+                <div class="updateBtnWrapper">
+                    
+                  <a href="/main/<%=post._id%>/updatePost" class="updateBtn">수정하기</a>
+
+                  <form action="/main/<%=post._id%>/deletePost?_method=DELETE" method="POST">
+                    <input type="submit" value="삭제하기" class="deleteBtn"/>
+                  </form>
+                </div>
+            <% } %>
+        </div>
+    </div>
+
+
+    <div class="reco-area">
+            <!-- up 버튼 -->
+            <div class="up-reco">
+                <!-- <span>UP: <%=post.ups%></span> -->
+                
+                <form method="POST" action="/main/<%=post._id%>/updateUps?_method=PUT" class="button-form">
+                    <input type="image" src="" value="UP: <%=post.ups%>" class="image-button" />
+                </form>
+            </div>
+            <!-- down 버튼 -->
+            <div class="down-reco">
+                <form method="POST" action="/main/<%=post._id%>/updateDowns?_method=PUT" class="button-form">
+                    <input type="image" src="" value="DOWN: <%=post.downs%>" class="image-button" />
+                </form>
+                
+                <!-- <span>DOWN: <%=post.downs%></span> -->
+            </div>  
+    </div>
+
+
+    <hr style="width:80vw">
+
+
+
+    <!-- comments section -->
+    <div class="comment-section">
+        <h2>전체댓글</h2>
+        <ul>
+            <% post.comments.forEach((comment) => { %>
+            <li><%=comment.commentContent %></li>
+            <% }) %>
+        </ul>
+        <hr />
+        <!-- add comment section -->
+        <form action="/main/<%=post._id%>/addComment" method="POST" class="comment-input">
+            <textarea name="commentContent" required></textarea>
+            <input type="submit" value="댓글달기"/>
+        </form>
+    </div>
+
+    
+    <hr/>
+    <section class="main_container">
+        <table class="gall_list">
+            <colgroup>
+                <col style="width:7%">
+                <col style="width:3.1875rem">
+                <col>
+                <col style="width:18%">
+                <col style="width:6%">
+                <col style="width:6%">
+            </colgroup>
+            <thead>
+                <tr>
+                    <th scope="col">번호</th>
+                    <th scope="col">말머리</th>
+                    <th scope="col">제목</th>
+                    <th scope="col">작성일</th>
+                    <th scope="col">조회</th>
+                    <th scope="col">추천</th>
+                </tr>
+            </thead>
+            <tbody class = "listwrap2">
+                <tr class ="ub-content">
+                    <%let count = 1; %>
+                    <% posts.forEach((post) => { %>
+                    <td class="gall_num" style="height: 25px;"><%= count++ %></td>
+                    <td class="gall_subject">일반</td>
+                    <td class="gall_tit ub-word">
+                        <a href="<%=post._id%>" view-msg>
+                            <%=post.postTitle %>
+                        </a>
+                    </td>
+                    
+                    <td class="gapp_date"> <%=new Date(post.createdAt).toLocaleDateString("ko-kr", {weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'}) %></td>
+                    <td class="gall_count"> <%=post.views%></td>
+                    <td class="gall_recommend"> <%=post.ups %></td>
+                </tr>
+                <% }) %>
+            </tbody>
+        </table>
+    </sectionv>
+</body>
+<script src="/js/toggleDarkMode.js"></script>
+<%- include('./include/footer') %>

@@ -1,0 +1,32 @@
+<%- include('./include/header') %>
+    <main>
+      <body>
+      <link rel="stylesheet" href="/css/addPost.css">
+      <div class="wrapper">
+        <link rel="stylesheet" href="/css/addPost.css">
+      <form action="/main/<%=post._id%>/updatePost?_method=PUT" method="POST" enctype="multipart/form-data">
+        <div class="addPostTitle">
+          <input
+            type="text"
+            required
+            placeholder="Post title here"
+            name="title"
+            value="<%=post.postTitle%>"
+            class="titleInput"
+          />
+          </div>
+          <div class="postContent">
+            <textarea 
+            required 
+            placeholder="Post content here" 
+            name="mainText"
+            class="contnetInput"><%=post.postContent%></textarea>
+          </div>
+        <input id="image" name="image" type="file" accept="image/*" />
+        <input type="submit" value="Update post" />
+        </div>
+      </form>
+    </main>
+  </body>
+  <script src="/js/toggleDarkMode.js"></script>
+<%- include('./include/footer') %>

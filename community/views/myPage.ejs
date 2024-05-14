@@ -1,0 +1,52 @@
+<%- include('./include/header') %>
+
+<main style="margin-top: 140px; margin-left: 15px; margin-right: 15px;">
+  <link rel="stylesheet" href="/css/main.css">
+    <h1 style="margin-bottom: 10px;"><%=user.userName%>'s Page</h1>
+
+
+    <h3 style="margin: 0; margin-bottom: 10px;">Posts</h3>
+    <section class="main_container" style="min-height: 400px;">
+      <table class="gall_list">
+        <colgroup>
+            <col style="width:7%">
+            <col style="width:3.1875rem">
+            <col>
+            <col style="width:18%">
+            <col style="width:6%">
+            <col style="width:6%">
+        </colgroup>
+        <thead>
+            <tr>
+                <th scope="col">번호</th>
+                <th scope="col">말머리</th>
+                <th scope="col">제목</th>
+                <th scope="col">작성일</th>
+                <th scope="col">조회</th>
+                <th scope="col">추천</th>
+            </tr>
+        </thead>
+        <tbody class = "listwrap2">
+            <tr class ="ub-content">
+                <%let postCount = 1; %>
+                <% user.posts.forEach((post) => { %>
+                <td class="gall_num" style="height: 25px;"><%= postCount++ %></td>
+                <td class="gall_subject">일반</td>
+                <td class="gall_tit ub-word">
+                    <a href="/main/<%=post._id%>" view-msg>
+                        <%=post.title %>
+                    </a>
+                  </td>
+                <td class="gapp_date"> <%=new Date(post.createdAt).toLocaleDateString("ko-kr", {weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'}) %></td>
+                <td class="gall_count"> <%=post.views%></td>
+                <td class="gall_recommend"> <%=post.ups %></td>
+            </tr>
+            <% }) %>
+        </tbody>
+    </table>
+    
+    </section>
+    </main>
+<script src="/js/toggleDarkMode.js"></script>
+
+<%- include('./include/footer') %>

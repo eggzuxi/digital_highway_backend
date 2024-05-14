@@ -1,0 +1,112 @@
+main{
+    margin-top: 125px;
+}
+html, body, div, span, iframe, h1, h2, h3, h4, h5, h6, p, a, em, img, strong, b, u, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, embed, figure, figcaption, footer, header, nav, section, summary, audio, video, button {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    vertical-align: baseline;
+    background: transparent;
+    font-style: normal;
+}
+.scroll-menu {
+    display: flex;
+    overflow-x: auto;
+}
+.gall_tit {
+    position: relative;
+    text-align: left;
+    font-size: 13px;
+}
+
+.gall_tit.ub-word a{
+    text-decoration: none;
+    color: #000;
+}
+
+.gall_list {
+    width: 100%;
+    border-bottom: 1px solid #f5f3f3;
+}
+body, button, input, select, table, textarea {
+    font-size: 12px;
+}
+.menu-item {
+    flex: 1;
+    min-width: 25%;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    padding: 10px;
+}
+table{
+    border-collapse: collapse;
+    border-spacing: 0;
+    table-layout: fixed;
+}
+.list .gall_list td{
+    height :25px;
+}
+.content-list {
+    height : 90vh;
+    width : 90vw;
+    overflow-y: auto;
+    border: 1px solid #000;
+}
+td{
+    padding: 2px -4px;
+    border-top: 1px solid #eee;
+    vertical-align: middle;
+    text-align: center;
+    color: #333;
+}
+.gall_list td{
+    padding: 0px 4px;
+}
+.gall_tit a {
+    display: inline-block;
+    max-width: 82%;
+    vertical-align: middle;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+.list .gall_tit a {
+    padding-top: 1px;
+    line-height: 100%;
+}
+/*숫자 메뉴 스타일*/
+.listwrap .bottom_paging_wrap {
+    display: inline-block;
+    width: 100%;
+    margin-top: 5px;
+    position: relative;
+    padding: 0 121px;
+    box-sizing: border-box;
+}
+
+/*숫자 메뉴 스타일*/
+.bottom_paging_box a, .bottom_paging_box em, .bottom_paging_box span {
+    display: inline-block;
+    margin-left: 9px;
+    font-size: 14px;
+    font-weight: bold;
+}
+.listwrap .bottom_paging_wrap .bottom_paging_box > a, .listwrap .bottom_paging_wrap .bottom_paging_box > em, .listwrap .bottom_paging_wrap .bottom_paging_box {
+    padding-top: 6px;
+}
+.bottom_paging_box {
+    position: relative;
+    margin-top: 18px;
+    text-align: center;
+    line-height: 20px;
+}
+
+/* 다크 모드 스타일 */
+.dark-mode{
+    background-color: #333333;
+    color: #ffffff;
+}
+
+.dark-mode .gall_num, .dark-mode .gall_subject, .dark-mode .gall_tit.ub-word a, .dark-mode .gapp_date, .dark-mode .gall_count, .dark-mode .gall_recommend {
+    color: #ffffff;
+}

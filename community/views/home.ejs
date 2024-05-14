@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>로그인</title>
+    <link rel="stylesheet" href="../public/css/">
+</head>
+<body>
+    <link rel="stylesheet" href="/css/login.css">
+<!-- 가장 바깥 컨테이너-->
+<div id = "container">
+    <!-- 로고 -->
+    <div class = "logo">
+    <img class="logo" src="" alt="디지털지름길 로고">
+    </div>
+<!-- join, goBack, google 인증 div-->
+<div>
+    <!-- login 영역 시작 -->
+    <div id="login">
+    <!-- ID,PASSWORD 입력칸 -->
+        <form action="/" method = "POST" class = "register" >
+            <div class = "inputBox">
+            <label for="userName" class="login_text"><b>아이디 :</b></label>
+            <input type="text" placeholder="아이디" name="userName" id="userName" class="login_input" required>
+            </div>
+            <div class = "inputBox">
+            <label for="password" class="login_text"><b>비밀번호 :</b></label>
+            <input type="password" placeholder="비밀번호" name="password" id="password" class="login_input" required>
+            </div><br>
+            <input type="submit" value="Login" class="login_btn">
+        </form>
+    </div>
+    <!-- 회원가입 -->
+    </div id = "join"> 
+        <a href="./join" class="login_btn">JOIN</a>
+    </div>

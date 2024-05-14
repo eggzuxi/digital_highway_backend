@@ -1,0 +1,118 @@
+header{
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 1000;
+}
+
+body{
+  margin: 0;
+}
+
+.main_search{
+  width: 100%;
+  text-align: center;
+}
+
+.search_logo img{
+  float: left;
+  display: block;
+  position: relative;
+  padding-left: 4vw;
+  width: 150px;
+  height: 50px;
+}
+
+#search_button{
+  float:right;
+  display:block;
+  position: relative;
+  padding-top:20px;
+  padding-right:4vw;
+}
+
+#my_page{
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+#logout{
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.main_searchinput{
+  width: 90vw;
+  height: 30px;
+  margin: 50 auto;
+  display: inline-block;
+}
+
+.menubar{
+  width: 100vw;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: space-between;
+  margin: 0;
+  padding-top: 10px;
+  padding-left: 5vw;
+  padding-right: 9vw;
+}
+
+.menubar li{
+  list-style-type: none;
+}
+
+.menubar a{
+  text-decoration: none;
+  color: black;
+}
+
+.menubar a.active{
+  background-color: #f0f0f0;
+  color: blue;
+}
+
+#menu_write_button{
+  padding-bottom: 10px;
+}
+
+#write_button{
+  background-color: transparent;
+  border-width: 1px solid black;
+  cursor: pointer;
+  font-size: 15px;
+}
+
+.header_container{
+  background-color: #f7f1e3;
+}
+
+.nav{
+  background-color: #f7f1e3;
+}
+
+
+/* 다크 모드 스타일 */
+.dark-mode .header_container {
+  background-color: #333; /* 배경색 변경 */
+  color: #fff; /* 텍스트 색상 변경 */
+}
+
+.dark-mode .nav{
+  background-color: #333; 
+}
+
+.dark-mode .header_container, .dark-mode .nav, .dark-mode .menubar a {
+  color: #fff; /* 모든 텍스트를 하얀색으로 변경 */
+}
+
+.dark-mode #write_button{
+  color: #fff;
+}
+
+.dark-mode #logout, .dark-mode #my_page{
+  color: #fff;
+}
