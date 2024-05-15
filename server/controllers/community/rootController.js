@@ -13,23 +13,23 @@ const getLogin = (req, res) => {
 // @desc Login user
 // @route Post /
 const postLogin = async (req, res) => {
-  const { userName, password } = req.body;
-  const user = await User.findOne({ userName });
+  const { userID, password } = req.body;
+  const user = await User.findOne({ userID });
+  console.log(user)
   if (!user) {
-    return res.send("존재하지 않는 아이디입니다.");
+    return res.status(400).send("존재하지않는 아이디입니다.");
   }
   const match = await bcrypt.compare(password, user.password);
   if (!match) {
-    return res.send("비밀번호가 틀렸습니다.");
+    return res.status(400).send("비밀번호가 틀렸습니다.");
   }
 
   const token = jwt.sign(
-    { userId: user._id, userName: user.userName },
+    { tokenId: user._id, userID: user.userID },
     jwtSecret
   );
   res.cookie("token", token, { httpOnly: true });
-
-  return res.redirect("/community");
+  res.status(200).json({message:"로그인성공"})
 };
 
 const getJoin = (req, res) => {
@@ -39,13 +39,15 @@ const getJoin = (req, res) => {
 // @desc Join user
 // @route Post /join
 const postJoin = async (req, res) => {
-  const { userName, password, password2 } = req.body;
-  if (password !== password2) {
-    return res.send("패스워드를 다시 확인해주세요.");
-  }
+  const { userName, userID, password, password2, phoneNum } = req.body;
+
+  // //react파일에서 패스워드 확인해서 주석처리했습니다.
+  // if (password !== password2) {
+  //   return res.send("패스워드를 다시 확인해주세요.");
+  // }
   const hashedPassword = await bcrypt.hash(password, 10);
-  const user = await User.create({ userName, password: hashedPassword });
-  res.status(201).redirect("/");
+  const user = await User.create({ userName:userName, userID, password: hashedPassword, phoneNum:phoneNum});
+  res.json(user)
 };
 
 // @desc Logout user

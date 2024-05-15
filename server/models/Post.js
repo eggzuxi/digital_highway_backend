@@ -1,14 +1,14 @@
 const mongoose = require("mongoose");
-const Schema = mongoose.Schema;
+// const Schema = mongoose.Schema;
+const db = mongoose.connection.useDb('community')
 
 // myPage 스키마
-const PostSchema = new Schema({
+const PostSchema = new mongoose.Schema({
   // 글 제목
   title: {
     type: String,
     required: true,
   },
-
 
   // 글 내용
   mainText: {
@@ -52,6 +52,6 @@ const PostSchema = new Schema({
   },
 });
 
-const Post = mongoose.model("Post", PostSchema);
+const Post = db.model("Post", PostSchema);
 
 module.exports = Post;

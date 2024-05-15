@@ -15,7 +15,7 @@ const {
 
 const router = express.Router();
 
-router.route("/").all(checkNotLogin).get(getLogin).post(postLogin);
+router.route("/login").all(checkNotLogin).get(getLogin).post(postLogin);
 router.route("/join").all(checkNotLogin).get(getJoin).post(postJoin);
 router.route("/logout").get(getLogout);
 

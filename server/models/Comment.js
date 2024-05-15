@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
-const Schema = mongoose.Schema;
+const db = mongoose.connection.useDb('community')
 
-const CommentSchema = new Schema({
+const CommentSchema = new mongoose.Schema({
   // 댓글 내용
   commentContent: {
     type: String,
@@ -29,6 +29,6 @@ const CommentSchema = new Schema({
   // strictPopulate: false
 });
 
-const Comment = mongoose.model("Comment", CommentSchema);
+const Comment = db.model("Comment", CommentSchema);
 
 module.exports = Comment;

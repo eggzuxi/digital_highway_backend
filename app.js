@@ -5,14 +5,18 @@ const MongoStore = require("connect-mongo");
 const cookieParser = require("cookie-parser");
 const dbConnect = require("./server/config/dbConnect");
 const methodOverride = require("method-override");
+const cors = require('cors')
 
 const PORT = 4000;
 
 const app = express();
+
+app.use(cors());
+
 dbConnect();
-app.use(express.static("./public"))
+app.use(express.static("./server/public"))
 app.set("view engine", "ejs");
-app.set("views", "./views");
+app.set("views", "./server/views");
 
 /* session middlewares */
 app.use(cookieParser());
