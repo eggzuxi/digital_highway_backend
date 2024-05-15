@@ -11,7 +11,11 @@ const PORT = 4000;
 
 const app = express();
 
-app.use(cors());
+// app.use(cors())
+app.use(cors({
+  origin:'http://localhost:5173',
+  credentials: true
+}));
 
 dbConnect();
 app.use(express.static("./server/public"))

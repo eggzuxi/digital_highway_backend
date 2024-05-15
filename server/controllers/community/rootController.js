@@ -4,11 +4,11 @@ const jwt = require("jsonwebtoken");
 
 const jwtSecret = process.env.JWT_SECRET;
 
-// @desc Show login
-// @route Get /
-const getLogin = (req, res) => {
-  res.render("home");
-};
+// // @desc Show login
+// // @route Get /
+// const getLogin = (req, res) => {
+//   res.render("home");
+// };
 
 // @desc Login user
 // @route Post /
@@ -32,9 +32,9 @@ const postLogin = async (req, res) => {
   res.status(200).json({message:"로그인성공"})
 };
 
-const getJoin = (req, res) => {
-  res.status(200).render("join");
-};
+// const getJoin = (req, res) => {
+//   res.status(200).render("join");
+// };
 
 // @desc Join user
 // @route Post /join
@@ -57,4 +57,4 @@ const getLogout = (req, res) => {
   res.redirect("/");
 };
 
-module.exports = { getLogin, postLogin, getJoin, postJoin, getLogout };
+module.exports = { postLogin, postJoin, getLogout };
