@@ -44,6 +44,8 @@ app.use(methodOverride("_method"));
 // main -> community로 변경할 것
 app.use("/", require("./server/routes/community/rootRoutes"));
 app.use("/community", require("./server/routes/community/mainRoutes"));
+app.use("/informations", require("./server/routes/information/infoRoutes"))
+app.use("/devices", require("./server/routes/deviceguide/kioscRoutes"))
 
 app.listen(PORT, () => {
   console.log(`Server listening from http://localhost:${PORT}`);
