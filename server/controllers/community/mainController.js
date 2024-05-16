@@ -73,14 +73,13 @@ const updateDowns = async (req, res) => {
 
 const showMyPage = async (req, res) => {
   const token = req.cookies.token;
-  const { userId } = jwt.verify(token, jwtSecret);
-  const user = await User.findOne({ _id: userId })
-    .populate("posts")
-    // .populate("comments");
-  return res.status(200).render("myPage", { user });
+  const { tokenId } = jwt.verify(token, jwtSecret);
+  const user = await User.findOne({ _id: tokenId })
+  res.json(user)
+  //   .populate("posts")
+  //   // .populate("comments");
+  // return res.status(200).render("myPage", { user });
 };
-
-
 
 // @desc Get add post page
 // @route Get /main/addPost
