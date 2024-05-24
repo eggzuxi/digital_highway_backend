@@ -1,11 +1,13 @@
 const asyncHandler = require("express-async-handler");
 const jwt = require("jsonwebtoken")
 const Kiosc = require("../../models/kioscModel");
+const authenticate = require("../../middlewares/tokentest");
 
 // @desc Get orderlist
 // @route GET /kiosc_03
 const getOrderList = asyncHandler(async(req, res) => {
-  const {userID} = req.query
+  const {userID} = req
+  // const {userID} = req.query
   const order = await Kiosc.findOne({userID})
   console.log(order)
   res.json(order)
@@ -14,7 +16,9 @@ const getOrderList = asyncHandler(async(req, res) => {
 //@desc POST order
 //@route POST /kiosc_03
 const orderCreate = async(req,res) => {
-  const {userID, orders} = req.body;
+  const { userID } = req;
+  const { orders } = req.body;
+  // const {userID, orders} = req.body;
 
   let userOrder = await Kiosc.findOne({userID});
 
@@ -42,7 +46,9 @@ const orderCreate = async(req,res) => {
 //@desc UPDATE order
 //@route UPDATE /kiosc_03
 const orderUpdate = asyncHandler(async(req,res)=>{
-  const {userID, orders, totalPrice} = req.body;
+  const { userID } = req;
+  const { orders } = req.body; 
+  // const {userID, orders, totalPrice} = req.body;
 
   const userOrder = await Kiosc.findOne({userID});
 
@@ -67,7 +73,8 @@ const orderUpdate = asyncHandler(async(req,res)=>{
 //@desc DELETE order
 //@route DELETE /kiosc_03
 const orderComplete = asyncHandler(async (req, res) => {
-  const {userID} = req.body;
+  const { userID } = req;
+  // const {userID} = req.body;
   try{
     const result = await Kiosc.deleteOne({userID});
     if(result.deletedCount === 1){

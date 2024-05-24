@@ -6,6 +6,7 @@ const cookieParser = require("cookie-parser");
 const dbConnect = require("./server/config/dbConnect");
 const methodOverride = require("method-override");
 const cors = require('cors')
+const { v4:uuidv4 } = require('uuid');
 
 const PORT = 4000;
 
@@ -27,6 +28,9 @@ app.use(cookieParser());
 
 app.use(
   session({
+    genid:(req)=>{
+      return uuidv4();
+    },
     secret: process.env.COOKIE_SECRET,
     resave: false,
     saveUninitialized: true,
