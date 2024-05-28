@@ -54,7 +54,8 @@ const postJoin = async (req, res) => {
 // @route Get /logout
 const getLogout = (req, res) => {
   res.clearCookie("token");
-  res.redirect("/");
+  res.json("로그아웃")
+  // res.redirect("/");
 };
 
 module.exports = { postLogin, postJoin, getLogout };
