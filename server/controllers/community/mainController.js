@@ -173,7 +173,7 @@ const updatePw = async (req,res)=>{
 const updatePhone = async(req,res)=>{
   const {updatedphone} = req.body;
   const token = req.cookies.token;
-  const {tokenId} = jwt.verify(toekn, jwtSecret);
+  const {tokenId} = jwt.verify(token, jwtSecret);
   const user = await User.findOne({_id:tokenId});
   user.password = updatedphone;
   user.save()
