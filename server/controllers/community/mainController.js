@@ -71,14 +71,19 @@ const updateDowns = async (req, res) => {
   return res.status(201).redirect(`/community/${postId}`);
 };
 
+//@desc get my page
+//@route Get /mypage
 const showMyPage = async (req, res) => {
   const token = req.cookies.token;
-  const { tokenId } = jwt.verify(token, jwtSecret);
-  const user = await User.findOne({ _id: tokenId })
-  res.json(user)
-  //   .populate("posts")
-  //   // .populate("comments");
-  // return res.status(200).render("myPage", { user });
+  if (!token){
+    return res.json(null);
+  }
+  try{const { tokenId } = jwt.verify(token, jwtSecret);
+  const user = await User.findOne({ _id: tokenId });
+  res.json(user);
+  }catch{
+    res.json(null)
+  }
 };
 
 // @desc Get add post page

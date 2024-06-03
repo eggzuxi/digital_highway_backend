@@ -51,11 +51,15 @@ const postJoin = async (req, res) => {
 };
 
 // @desc Logout user
-// @route Get /logout
-const getLogout = (req, res) => {
-  res.clearCookie("token");
-  res.json("로그아웃")
-  // res.redirect("/");
+// @route Post /logout
+const postLogout = async (req, res) => {
+  try{
+    res.clearCookie('token',{path:'/', domain: 'localhost', secure:false, httpOnly:true});
+    res.status(200).json({success:true, message:'로그아웃 완료'});
+  }catch(err){
+    console.error('로그아웃오류',err);
+    res.status(500).json({message:'로그아웃 중 오류발생'})
+  }  
 };
 
-module.exports = { postLogin, postJoin, getLogout };
+module.exports = { postLogin, postJoin, postLogout };
