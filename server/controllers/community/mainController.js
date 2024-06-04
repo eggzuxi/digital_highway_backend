@@ -142,42 +142,42 @@ const deletePost = async (req, res) => {
   res.status(201).redirect(`/community`);
 };
 
-//@desc get my page
-//@route Get /mypage
-const showMyPage = async (req, res) => {
-  const token = req.cookies.token;
-  if (!token){
-    return res.json(null);
-  }
-  try{const { tokenId } = jwt.verify(token, jwtSecret);
-  const user = await User.findOne({ _id: tokenId });
-  res.json(user);
-  }catch{
-    res.json(null)
-  }
-};
+// //@desc get my page
+// //@route Get /mypage
+// const showMyPage = async (req, res) => {
+//   const token = req.cookies.token;
+//   if (!token){
+//     return res.json(null);
+//   }
+//   try{const { tokenId } = jwt.verify(token, jwtSecret);
+//   const user = await User.findOne({ _id: tokenId });
+//   res.json(user);
+//   }catch{
+//     res.json(null)
+//   }
+// };
 
-//@desc update pw
-//@route PUT /mypage/updatePW
-const updatePw = async (req,res)=>{
-  const {updatedpw} = req.body;
-  const token = req.cookies.token;
-  const {tokenId} = jwt.verify(token, jwtSecret);
-  const user = await User.findOne({_id:tokenId});
-  user.password = updatedpw;
-  user.save()
-}
+// //@desc update pw
+// //@route PUT /mypage/updatePW
+// const updatePw = async (req,res)=>{
+//   const {updatedpw} = req.body;
+//   const token = req.cookies.token;
+//   const {tokenId} = jwt.verify(token, jwtSecret);
+//   const user = await User.findOne({_id:tokenId});
+//   user.password = updatedpw;
+//   user.save()
+// }
 
-//@desc update phoneNum
-//@route PUT /mypage/updatePhone
-const updatePhone = async(req,res)=>{
-  const {updatedphone} = req.body;
-  const token = req.cookies.token;
-  const {tokenId} = jwt.verify(token, jwtSecret);
-  const user = await User.findOne({_id:tokenId});
-  user.password = updatedphone;
-  user.save()
-}
+// //@desc update phoneNum
+// //@route PUT /mypage/updatePhone
+// const updatePhone = async(req,res)=>{
+//   const {updatedphone} = req.body;
+//   const token = req.cookies.token;
+//   const {tokenId} = jwt.verify(token, jwtSecret);
+//   const user = await User.findOne({_id:tokenId});
+//   user.password = updatedphone;
+//   user.save()
+// }
 
 module.exports = {
   showMain,
@@ -185,12 +185,9 @@ module.exports = {
   addComment,
   updateUps,
   updateDowns,
-  showMyPage,
   getAddPost,
   postAddPost,
   getUpdatePost,
   updatePost,
   deletePost,
-  updatePw,
-  updatePhone
 };

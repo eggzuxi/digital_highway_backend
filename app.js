@@ -46,7 +46,8 @@ app.use(methodOverride("_method"));
 
 /* routers */
 // main -> community로 변경할 것
-app.use("/", require("./server/routes/community/rootRoutes"));
+app.use("/", require("./server/routes/main/rootRoutes"));
+app.use("/myPage", require("./server/routes/main/mypageRoutes"));
 app.use("/community", require("./server/routes/community/mainRoutes"));
 app.use("/informations", require("./server/routes/information/infoRoutes"))
 app.use("/devices", require("./server/routes/deviceguide/kioscRoutes"))

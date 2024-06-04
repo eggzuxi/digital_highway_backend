@@ -24,9 +24,9 @@ const {
 const router = express.Router();
 
 router.route("/").all(checkLogin).get(showMain);
-router.route("/myPage").all(checkLogin).get(showMyPage);
-router.route("/myPage/updatePw").put(updatePw);
-router.route("/myPage/updatedPhone").put(updatePhone);
+// router.route("/myPage").all(checkLogin).get(showMyPage);
+// router.route("/myPage/updatePw").put(updatePw);
+// router.route("/myPage/updatedPhone").put(updatePhone);
 
 router
   .route("/addPost")

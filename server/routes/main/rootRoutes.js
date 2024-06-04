@@ -8,7 +8,7 @@ const {
   postLogin,
   postJoin,
   postLogout,
-} = require("../../controllers/community/rootController");
+} = require("../../controllers/main/rootController");
 
 const router = express.Router();
 
