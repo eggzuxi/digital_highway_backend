@@ -6,7 +6,7 @@ const jwtSecret = process.env.JWT_SECRET
 
 //@desc get my page
 //@route Get /mypage
-const showMyPage = async (req, res) => {
+const showUserPage = async (req, res) => {
   const token = req.cookies.token;
   if (!token){
     return res.json(null);
@@ -41,4 +41,11 @@ const updatePhone = async(req,res)=>{
   user.save()
 }
 
-module.exports = {showMyPage, updatePw, updatePhone}
+const getMypage = async(req,res)=>{
+  const token = req.cookies.token;
+  const {tokenId} = jwt.verify(token, jwtSecret);
+  const mark = await Mypage.findOne({userID:tokenId});
+  res.json(mark)
+};
+
+module.exports = {showUserPage, updatePw, updatePhone, getMypage}

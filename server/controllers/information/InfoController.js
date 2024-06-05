@@ -38,59 +38,73 @@ const getWelfarePage = asyncHandler(async(req, res) => {
   // res.render("welInfo", {posts:posts});
 })
 
-const bookmark = asyncHandler(async(req,res)=>{
-  const {postId, category} = req.body;
+const bookmark = asyncHandler(async (req, res) => {
+  const { postId, category } = req.body;
   const token = req.cookies.token;
 
-  if (!token) {console.log("게스트모드")}
+  if (!token) {
+    console.log("게스트모드");
+    return res.status(401).json({ message: "Unauthorized" });
+  }
 
-  let post;
-  switch(category){
-    case "문화":
-      post = await culture.findById(postId);
-      break;
-    case "건강":
-      post = await health.findById(postId);
-      break;
-    case "취업":
-      post = await career.findById(postId);
-      break;
-    case "금융":
-      post = await finance.findById(postId);
-      break;
-    case "복지":
-      post = await welfare.findById(postId);
-      break;
-    default:
-      return res.status(400).json({ message: "Invalid category" });
-    }
-
-    if (!post) {
-      console.log(post)
-      return res.status(404).json({ message: "Post not found" });
-    }
-
-  try{
-    const {tokenId} = jwt.verify(token, jwtSecret);
-    const mark = await Mypage.findOne({userID:tokenId})
+  try {
+    const { tokenId } = jwt.verify(token, jwtSecret);
+    const mark = await Mypage.findOne({ userID: tokenId });
 
     if (!mark) {
       return res.status(404).json({ message: "User not found" });
     }
 
-    mark.bookmarks.push({
-      category,
-      title: post.title,
-      link:post.link
-    })
+    let post;
+    switch (category) {
+      case "문화":
+        post = await culture.findById(postId);
+        break;
+      case "건강":
+        post = await health.findById(postId);
+        break;
+      case "취업":
+        post = await career.findById(postId);
+        break;
+      case "금융":
+        post = await finance.findById(postId);
+        break;
+      case "복지":
+        post = await welfare.findById(postId);
+        break;
+      default:
+        return res.status(400).json({ message: "Invalid category" });
+    }
 
-    await mark.save();
-    res.status(200).json({message:"bookmark added successfully"})
-  }catch(err){
+    if (!post) {
+      return res.status(404).json({ message: "Post not found" });
+    }
+
+    // 이미 즐겨찾기된 항목이 있는지 확인
+    const existingBookmarkIndex = mark.bookmarks.findIndex(
+      (item) => item.category === category && item.title === post.title
+    );
+
+    if (existingBookmarkIndex !== -1) {
+      // 해당 postId를 가진 즐겨찾기를 제거
+      mark.bookmarks.splice(existingBookmarkIndex, 1);
+      await mark.save();
+      return res.status(200).json({ message: "Bookmark removed successfully" });
+    } else {
+      // postId가 존재하지 않는 경우, 즐겨찾기 목록에 추가
+      mark.bookmarks.push({
+        category,
+        title: post.title,
+        link: post.link
+      });
+
+      await mark.save();
+      return res.status(200).json({ message: "Bookmark added successfully" });
+    }
+  } catch (err) {
     console.error(err);
-    res.status(500).json({message:"internal server error"})
+    return res.status(500).json({ message: "Internal server error" });
   }
-  
 });
 
 module.exports = {getHealthPage, getCulturePage, getFinancePage, getCareerPage, getWelfarePage, bookmark};

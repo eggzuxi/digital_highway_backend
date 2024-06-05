@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const {getHealthPage, getCulturePage, getFinancePage, getCareerPage, getWelfarePage, bookmark} = require("../../controllers/information/InfoController")
+const {getHealthPage, getCulturePage, getFinancePage, getCareerPage, getWelfarePage, bookmark, removeBookmark} = require("../../controllers/information/InfoController")
 
 router.route("/health") //informations뒤에 /health 이 붙을 때
   .get(getHealthPage)
