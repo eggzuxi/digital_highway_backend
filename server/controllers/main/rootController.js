@@ -1,4 +1,5 @@
 const User = require("../../models/User");
+const Mypage = require("../../models/myPage")
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
@@ -31,8 +32,9 @@ const postLogin = async (req, res) => {
 const postJoin = async (req, res) => {
   const { userName, userID, password, password2, phoneNum } = req.body;
   const hashedPassword = await bcrypt.hash(password, 10);
-  const user = await User.create({ userName:userName, userID, password: hashedPassword, phoneNum:phoneNum});
-  res.json(user)
+  const user = await User.create({ userName:userName, userID:userID, password: hashedPassword, phoneNum:phoneNum});
+  await Mypage.create({userID: user._id, myPost:[], myComments:[], bookmarks:[]});
+  res.status(200).json(user)
 };
 
 // @desc Logout user
