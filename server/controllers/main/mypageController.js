@@ -43,6 +43,9 @@ const updatePhone = async(req,res)=>{
 
 const getMypage = async(req,res)=>{
   const token = req.cookies.token;
+  if (!token){
+    return res.json(null);
+  }
   const {tokenId} = jwt.verify(token, jwtSecret);
   const mark = await Mypage.findOne({userID:tokenId});
   res.json(mark)

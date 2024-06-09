@@ -60,7 +60,7 @@ const bookmark = asyncHandler(async (req, res) => {
       case "문화":
         post = await culture.findById(postId);
         break;
-      case "건강":
+      case "의료":
         post = await health.findById(postId);
         break;
       case "취업":
@@ -99,7 +99,7 @@ const bookmark = asyncHandler(async (req, res) => {
       });
 
       await mark.save();
-      return res.status(200).json({ message: "Bookmark added successfully" });
+      return res.status(201).json({ message: "Bookmark added successfully" });
     }
   } catch (err) {
     console.error(err);
