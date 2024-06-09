@@ -3,6 +3,7 @@ const User = require("../../models/User");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
 const jwtSecret = process.env.JWT_SECRET
+const bcrypt = require('bcrypt');
 
 //@desc get my page
 //@route Get /mypage
@@ -22,23 +23,50 @@ const showUserPage = async (req, res) => {
 //@desc update pw
 //@route PUT /mypage/updatePW
 const updatePw = async (req,res)=>{
-  const {updatedpw} = req.body;
-  const token = req.cookies.token;
-  const {tokenId} = jwt.verify(token, jwtSecret);
-  const user = await User.findOne({_id:tokenId});
-  user.password = updatedpw;
-  user.save()
+  const {userId, currentPassword, newPassword} = req.body;
+
+  try{
+    const user = await User.findOne({userID:userId});
+    if(!user){
+      return res.status(404).json({message:'User not found'});
+    }
+  
+  //현재 비밀번호 확인
+  const isMatch = await bcrypt.compare(currentPassword, user.password)
+  if(!isMatch){
+    return res.status(400).json({ message: 'Current password is incorrect' });
+  }
+  
+  // 새 비밀번호 해싱 및 업데이트
+  const salt = await bcrypt.genSalt(10);
+  const hashedPassword = await bcrypt.hash(newPassword, salt);
+  user.password = hashedPassword;
+  await user.save();
+
+  res.json({ message: 'Password updated successfully' });
+}catch (error) {
+  console.error(error);
+  res.status(500).json({ message: 'Server error' });
+}
+
 }
 
 //@desc update phoneNum
 //@route PUT /mypage/updatePhone
-const updatePhone = async(req,res)=>{
-  const {updatedphone} = req.body;
-  const token = req.cookies.token;
-  const {tokenId} = jwt.verify(token, jwtSecret);
-  const user = await User.findOne({_id:tokenId});
-  user.password = updatedphone;
-  user.save()
+const updateTel = async(req,res)=>{
+  const {userId, selectedCountry, phoneNumber} = req.body;
+  try{
+    const user = await User.findOne({userID:userId});
+    if(!user){
+      return res.status(404).json({message:'User not found'});
+    }
+    user.phoneNum = selectedCountry+") "+phoneNumber;
+    await user.save();
+    res.json({ message: 'Phone number updated successfully' });
+  }catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server error' });
+  }
 }
 
 const getMypage = async(req,res)=>{
@@ -51,4 +79,4 @@ const getMypage = async(req,res)=>{
   res.json(mark)
 };
 
-module.exports = {showUserPage, updatePw, updatePhone, getMypage}
+module.exports = {showUserPage, updatePw, updateTel, getMypage}
