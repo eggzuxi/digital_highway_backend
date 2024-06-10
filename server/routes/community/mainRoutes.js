@@ -32,7 +32,7 @@ router
   .route("/addPost")
   .all(checkLogin)
   .get(getAddPost)
-  .post(imageUpload.single("image"), postAddPost);
+  .post(postAddPost);
 router.route("/:id").all(checkLogin).get(seePost);
 router
   .route("/:id/updatePost")

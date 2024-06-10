@@ -5,7 +5,7 @@ const jwt = require("jsonwebtoken");
 const jwtSecret = process.env.JWT_SECRET;
 const Post = require("../../models/Post");
 const Comment = require("../../models/Comment");
-const User = require("../../models/User");
+const User = require("../../models/User")
 
 // main -> community로 변경할 것
 // @desc Show main page
@@ -77,30 +77,54 @@ const getAddPost = async (req, res) => {
   return res.status(200).render("addPost");
 };
 
-// @desc Add post
-// @route Post /main/addPost
 const postAddPost = async (req, res) => {
-  const { title, mainText } = req.body;
-  const token = req.cookies.token;
-  const { userId } = jwt.verify(token, jwtSecret);
-  const { file } = req;
-  let imageUrl;
-  if (file) {
-    const path = file.path;
-    imageUrl = path.substr(6);
-  }
-  const newPost = await Post.create({
-    title,
-    mainText,
-    writer: userId,
-    imageUrl: file ? imageUrl : "",
-  });
+  try {
+    const { title, mainText, tags } = req.body;
+    console.log("요청 본문:", req.body);
 
-  const user = await User.findOne({ _id: userId });
-  user.posts.unshift(newPost);
-  user.save();
-  res.status(201).redirect("/community");
+    const token = req.cookies.token;
+    if (!token) {
+      return res.status(401).json({ message: "인증 토큰이 없습니다." });
+    }
+
+    const decoded = jwt.verify(token, jwtSecret);
+    console.log("디코딩된 토큰:", decoded);
+
+    const userId = decoded.tokenId
+    console.log("디코딩된 사용자 ID:", userId);
+
+    if (!userId) {
+      return res.status(401).json({ message: "유효하지 않은 사용자입니다." });
+    }
+
+    const { file } = req;
+
+    let imageUrl = "";
+    if (file) {
+      const path = file.path;
+      imageUrl = path.substr(6);
+    }
+
+    const newPost = await Post.create({
+      title,
+      mainText,
+      writer: userId,
+      imageUrl,
+      // tags, // 태그 추가
+    });
+    console.log("새 포스트 생성:", newPost);
+
+    const user = await User.findOne({ _id: userId });
+    user.posts.unshift(newPost);
+    await user.save();
+
+    res.status(201).json({ message: "포스트 생성 완료" });
+  } catch (err) {
+    console.error("포스트 생성 중 오류가 발생했습니다:", err);
+    res.status(500).json({ message: "서버 오류" });
+  }
 };
+
 
 
 
