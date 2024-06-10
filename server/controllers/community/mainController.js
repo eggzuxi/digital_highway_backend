@@ -7,14 +7,20 @@ const Post = require("../../models/Post");
 const Comment = require("../../models/Comment");
 const User = require("../../models/User")
 
-// main -> community로 변경할 것
 // @desc Show main page
 // @route Get /main
 const showCommunity = async (req, res) => {
   try {
-    const posts = await Post.find({}).sort({ createdAt: -1 });
-
-    // 모든 게시물의 작성자 정보 가져오기
+    const type = req.query.type;
+    let posts
+    //params의 type값이 hot이면 인기게시물 순으로, 아니면 최신게시물 순으로 포스트 불러옴
+    if (type == "hot"){
+      posts = await Post.find({}).sort({ views: -1 });
+    }else{
+      posts = await Post.find({}).sort({ createdAt: -1 });
+    }
+    
+    // 작성자에 유저아이디 뜨게 하기
     const postsWithWriterInfo = await Promise.all(posts.map(async (post) => {
       const user = await User.findById(post.writer);
       if (user) {
@@ -31,17 +37,43 @@ const showCommunity = async (req, res) => {
 };
 
 // @desc See post
-// @route Get /main/:id
+// @route GET /main/:id
 const seePost = async (req, res) => {
-  const posts = await Post.find({}).sort({ createdAt: -1 });
-  const { id } = req.params;
-  const post = await Post.findById(id).populate("comments");
-  post.views = post.views + 1;
-  post.save();
+  try {
+    const { id } = req.params;
 
-  const token = req.cookies.token;
-  const { userId } = jwt.verify(token, jwtSecret);
-  res.status(200).render("post", { post, posts, userId });
+    // Fetch the specific post by ID and populate comments
+    // const post = await Post.findById(id).populate("comments");
+    const post = await Post.findById(id)
+    if (!post) {
+      return res.status(404).json({ message: "Post not found" });
+    }
+
+    // 조회수 올라감
+    post.views += 1;
+    await post.save();
+
+    // Find the user associated with the post writer ID
+    const user = await User.findById(post.writer);
+    if (!user) {
+      post.writerName = "Unknown";
+    } else {
+      post.writerName = user.userID;
+    }
+
+    // Get all posts sorted by creation date
+    const posts = await Post.find({}).sort({ createdAt: -1 });
+
+    // // Verify the JWT token from cookies
+    // const token = req.cookies.token;
+    // const { userId } = jwt.verify(token, jwtSecret);
+
+    // Return the post data as JSON
+    res.status(200).json({post, writerName:post.writerName});
+  } catch (error) {
+    console.error("Error fetching post:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
 };
 
 // // @desc Add comment
@@ -139,9 +171,6 @@ const postAddPost = async (req, res) => {
     res.status(500).json({ message: "서버 오류" });
   }
 };
-
-
-
 
 // // @desc Get update post page
 // // @route Get /main/:id/updatePost

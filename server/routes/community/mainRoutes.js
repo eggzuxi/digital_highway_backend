@@ -8,6 +8,7 @@ const { imageUpload } = require("../../middlewares/imageUpload");
 const {
   showCommunity,
   seePost,
+  getHotPosts,
   // addComment,
   // updateUps,
   // updateDowns,
@@ -22,14 +23,15 @@ const router = express.Router();
 
 router.route("/").get(showCommunity);
 
-
 router
   .route("/addPost")
   .all(checkLogin)
   // .get(getAddPost)
   .post(postAddPost);
 
-router.route("/:id").all(checkLogin).get(seePost);
+router.route("/:id")
+// .all(checkLogin)
+.get(seePost);
 // router
 //   .route("/:id/updatePost")
 //   .all(checkLogin)
