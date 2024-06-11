@@ -42,16 +42,28 @@ const seePost = async (req, res) => {
   try {
     const { id } = req.params;
 
-    // Fetch the specific post by ID and populate comments
-    // const post = await Post.findById(id).populate("comments");
+    // Fetch the specific post by ID
     const post = await Post.findById(id)
+    
     if (!post) {
       return res.status(404).json({ message: "Post not found" });
     }
+    // Fetch comments associated with the post
+    const comments = await Comment.find({ post: id });
 
-    // 조회수 올라감
-    post.views += 1;
-    await post.save();
+    // Add writerName to each comment
+    const commentsWithWriterInfo = await Promise.all(
+      comments.map(async (comment) => {
+        const user = await User.findById(comment.writer);
+        if (user) {
+          return { ...comment, writerName: user.userID };
+        } else {
+          return { ...comment, writerName: "Unknown" };
+        }
+      })
+    );
+
+    
 
     // Find the user associated with the post writer ID
     const user = await User.findById(post.writer);
@@ -61,45 +73,48 @@ const seePost = async (req, res) => {
       post.writerName = user.userID;
     }
 
-    // Get all posts sorted by creation date
-    const posts = await Post.find({}).sort({ createdAt: -1 });
+    // 조회수 올라감
+    post.views += 1;
+    await post.save();
 
     // // Verify the JWT token from cookies
     // const token = req.cookies.token;
     // const { userId } = jwt.verify(token, jwtSecret);
 
     // Return the post data as JSON
-    res.status(200).json({post, writerName:post.writerName});
+    res.status(200).json({post, writerName:post.writerName, comments:commentsWithWriterInfo});
   } catch (error) {
     console.error("Error fetching post:", error);
     res.status(500).json({ message: "Internal server error" });
   }
 };
 
-// // @desc Add comment
-// // @route Post /main/:id/addComment
-// const addComment = async (req, res) => {
-//   const postId = req.params.id;
-//   const token = req.cookies.token;
-//   const { userId } = jwt.verify(token, jwtSecret);
-//   const { commentContent } = req.body;
-//   const newComment = await Comment.create({
-//     commentContent,
-//     writer: userId,
-//     post: postId,
-//   });
+// @desc Add comment
+// @route Post /main/:id/addComment
+const addComment = async (req, res) => {
+  const postId = req.params.id;
+  const token = req.cookies.token;
+  const decoded = jwt.verify(token, jwtSecret);
+  const userId = decoded.tokenId;
 
-//   // 유저가 작성한 코멘트 배열에 추가
-//   const user = await User.findOne({ _id: userId });
-//   user.comments.unshift(newComment._id);
-//   await user.save();
+  const { commentContent } = req.body;
+  const newComment = await Comment.create({
+    commentContent,
+    writer: userId,
+    post: postId,
+  });
 
-//   // 포스트의 코멘트 배열에 추가
-//   const post = await Post.findOne({ _id: postId });
-//   post.comments.unshift(newComment._id);
-//   await post.save();
-//   res.redirect(`/community/${postId}`);
-// };
+  // 유저가 작성한 코멘트 배열에 추가
+  const user = await User.findOne({ _id: userId });
+  user.comments.unshift(newComment._id);
+  await user.save();
+
+  // 포스트의 코멘트 배열에 추가
+  const post = await Post.findOne({ _id: postId });
+  post.comments.unshift(newComment._id);
+  await post.save();
+  res.status(200).json({post, user})
+};
 
 // const updateUps = async (req, res) => {
 //   const postId = req.params.id;
@@ -250,7 +265,7 @@ const postAddPost = async (req, res) => {
 module.exports = {
   showCommunity,
   seePost,
-  // addComment,
+  addComment,
   // updateUps,
   // updateDowns,
   // getAddPost,

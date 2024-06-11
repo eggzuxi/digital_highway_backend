@@ -16,6 +16,14 @@ const PostSchema = new mongoose.Schema({
     required: true,
   },
 
+ // 댓글 내용
+  comments: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Comment",
+    },
+  ],
+
 
   // 작성자
   writer: {

@@ -8,8 +8,7 @@ const { imageUpload } = require("../../middlewares/imageUpload");
 const {
   showCommunity,
   seePost,
-  getHotPosts,
-  // addComment,
+  addComment,
   // updateUps,
   // updateDowns,
   // getAddPost,
@@ -38,7 +37,7 @@ router.route("/:id")
 //   .get(getUpdatePost)
 //   .put(imageUpload.single("image"), updatePost);
 // router.route("/:id/deletePost").all(checkLogin).delete(deletePost);
-// router.route("/:id/addComment").all(checkLogin).post(addComment);
+router.route("/:id/addComment").all(checkLogin).post(addComment);
 // router.route("/:id/updateUps").all(checkLogin).put(updateUps);
 // router.route("/:id/updateDowns").all(checkLogin).put(updateDowns);
 module.exports = router;
