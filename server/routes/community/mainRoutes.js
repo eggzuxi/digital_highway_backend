@@ -15,7 +15,7 @@ const {
   postAddPost,
   // getUpdatePost,
   // updatePost,
-  // deletePost,
+  deletePost,
 } = require("../../controllers/community/mainController");
 
 const router = express.Router();
@@ -35,8 +35,8 @@ router.route("/:id")
 //   .route("/:id/updatePost")
 //   .all(checkLogin)
 //   .get(getUpdatePost)
-//   .put(imageUpload.single("image"), updatePost);
-// router.route("/:id/deletePost").all(checkLogin).delete(deletePost);
+//   .put(updatePost);
+router.route("/:id/deletePost").delete(deletePost);
 router.route("/:id/addComment").all(checkLogin).post(addComment);
 // router.route("/:id/updateUps").all(checkLogin).put(updateUps);
 // router.route("/:id/updateDowns").all(checkLogin).put(updateDowns);

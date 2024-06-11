@@ -216,14 +216,21 @@ const postAddPost = async (req, res) => {
 //   res.status(201).redirect(`/community/${postId}`);
 // };
 
-// // @desc Delete post
-// // @route Delete /main/:id/deletedPost
-// const deletePost = async (req, res) => {
-//   const postId = req.params.id;
-//   await Post.findByIdAndDelete(postId);
-//   await Comment.deleteMany({ post: postId });
-//   res.status(201).redirect(`/community`);
-// };
+// @desc Delete post
+// @route Delete /main/:id/deletedPost
+const deletePost = async (req, res) => {
+  const postId = req.params.id;
+  try {
+    // 댓글 삭제
+    await Comment.deleteMany({ post: postId });
+    // 포스트 삭제
+    await Post.findByIdAndDelete(postId);
+    res.status(200).json({ message: 'Post deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting post:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
 
 // //@desc get my page
 // //@route Get /mypage
@@ -272,5 +279,5 @@ module.exports = {
   postAddPost,
   // getUpdatePost,
   // updatePost,
-  // deletePost,
+  deletePost,
 };
