@@ -11,10 +11,9 @@ const {
   addComment,
   // updateUps,
   // updateDowns,
-  // getAddPost,
   postAddPost,
-  // getUpdatePost,
-  // updatePost,
+  getUpdatePost,
+  updatePost,
   deletePost,
 } = require("../../controllers/community/mainController");
 
@@ -31,11 +30,11 @@ router
 router.route("/:id")
 // .all(checkLogin)
 .get(seePost);
-// router
-//   .route("/:id/updatePost")
-//   .all(checkLogin)
-//   .get(getUpdatePost)
-//   .put(updatePost);
+router
+  .route("/:id/updatePost")
+  // .all(checkLogin)
+  .get(getUpdatePost)
+  .put(updatePost);
 router.route("/:id/deletePost").delete(deletePost);
 router.route("/:id/addComment").all(checkLogin).post(addComment);
 // router.route("/:id/updateUps").all(checkLogin).put(updateUps);

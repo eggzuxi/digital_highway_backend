@@ -133,12 +133,6 @@ const addComment = async (req, res) => {
 //   return res.status(201).redirect(`/community/${postId}`);
 // };
 
-// // @desc Get add post page
-// // @route Get /main/addPost
-// const getAddPost = async (req, res) => {
-//   return res.status(200).render("addPost");
-// };
-
 const postAddPost = async (req, res) => {
   try {
     const { title, mainText, tags } = req.body;
@@ -172,7 +166,7 @@ const postAddPost = async (req, res) => {
       mainText,
       writer: userId,
       imageUrl,
-      // tags, // 태그 추가
+      tags, // 태그 추가
     });
     console.log("새 포스트 생성:", newPost);
 
@@ -186,38 +180,65 @@ const postAddPost = async (req, res) => {
     res.status(500).json({ message: "서버 오류" });
   }
 };
+//업데이트할 글 불러오기
+const getUpdatePost = async (req, res) => {
+  try {
+    const postId = req.params.id;
+    if (!postId) {
+      return res.status(400).json({ message: 'Post ID is required' });
+    }
 
-// // @desc Get update post page
-// // @route Get /main/:id/updatePost
-// const getUpdatePost = async (req, res) => {
-//   const postId = req.params.id;
-//   const post = await Post.findOne({ _id: postId });
-//   res.status(200).render("updatePost", { post });
-// };
+    const post = await Post.findOne({ _id: postId });
+    if (!post) {
+      return res.status(404).json({ message: 'Post not found' });
+    }
 
+    res.status(200).json({ post });
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
 
+//글 수정
+const updatePost = async (req, res) => {
+  try {
+    const postId = req.params.id;
+    if (!postId) {
+      return res.status(400).json({ message: 'Post ID is required' });
+    }
 
-// // @desc Update post
-// // @route Put /main/:id/updatePost
-// const updatePost = async (req, res) => {
-//   const postId = req.params.id;
-//   const { title, mainText } = req.body;
-//   const { file } = req;
-//   let imageUrl;
-//   if (file) {
-//     const path = file.path;
-//     imageUrl = path.substr(6);
-//   }
-//   await Post.findByIdAndUpdate(postId, {
-//     title,
-//     mainText,
-//     imageUrl: file ? imageUrl : "",
-//   });
-//   res.status(201).redirect(`/community/${postId}`);
-// };
+    const { title, mainText, tags } = req.body;
+    if (!title || !mainText) {
+      return res.status(400).json({ message: 'Title and main text are required' });
+    }
+
+    const { file } = req;
+    let imageUrl;
+    if (file) {
+      const path = file.path;
+      imageUrl = path.substr(6);
+    }
+
+    const updatedPost = await Post.findByIdAndUpdate(postId, {
+      title,
+      mainText,
+      imageUrl: file ? imageUrl : "",
+      tags,
+    }, { new: true });
+
+    if (!updatedPost) {
+      return res.status(404).json({ message: 'Post not found' });
+    }
+
+    res.status(201).json({ message: "Post updated successfully", post: updatedPost });
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error: error.message });
+  }
+};
+
 
 // @desc Delete post
-// @route Delete /main/:id/deletedPost
+// @route Delete /community/:id/deletedPost
 const deletePost = async (req, res) => {
   const postId = req.params.id;
   try {
@@ -232,42 +253,6 @@ const deletePost = async (req, res) => {
   }
 };
 
-// //@desc get my page
-// //@route Get /mypage
-// const showMyPage = async (req, res) => {
-//   const token = req.cookies.token;
-//   if (!token){
-//     return res.json(null);
-//   }
-//   try{const { tokenId } = jwt.verify(token, jwtSecret);
-//   const user = await User.findOne({ _id: tokenId });
-//   res.json(user);
-//   }catch{
-//     res.json(null)
-//   }
-// };
-
-// //@desc update pw
-// //@route PUT /mypage/updatePW
-// const updatePw = async (req,res)=>{
-//   const {updatedpw} = req.body;
-//   const token = req.cookies.token;
-//   const {tokenId} = jwt.verify(token, jwtSecret);
-//   const user = await User.findOne({_id:tokenId});
-//   user.password = updatedpw;
-//   user.save()
-// }
-
-// //@desc update phoneNum
-// //@route PUT /mypage/updatePhone
-// const updatePhone = async(req,res)=>{
-//   const {updatedphone} = req.body;
-//   const token = req.cookies.token;
-//   const {tokenId} = jwt.verify(token, jwtSecret);
-//   const user = await User.findOne({_id:tokenId});
-//   user.password = updatedphone;
-//   user.save()
-// }
 
 module.exports = {
   showCommunity,
@@ -275,9 +260,8 @@ module.exports = {
   addComment,
   // updateUps,
   // updateDowns,
-  // getAddPost,
   postAddPost,
-  // getUpdatePost,
-  // updatePost,
+  getUpdatePost,
+  updatePost,
   deletePost,
 };
