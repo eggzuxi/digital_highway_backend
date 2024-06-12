@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>이미지 업로드</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>이미지 업로드 하기</h1>
+  <form id="uploadForm" enctype="multipart/form-data">
+    <label for="writer">작성자:</label>
+    <input type="text" id="writer" name="writer" required>
+    <br>
+    <label for="postTitle">제목:</label>
+    <input type="text" id="postTitle" name="postTitle" required>
+    <br>
+    <label for="postContent">내용:</label>
+    <textarea id="postContent" name="postContent" required></textarea>
+    <br>
+    <label for="images">이미지 파일 선택:</label>
+    <input type="file" id="images" name="images" accept="image/*" multiple>
+    <br>
+    <button type="submit">Upload</button>
+  </form>
+  <div id="result"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>
+
