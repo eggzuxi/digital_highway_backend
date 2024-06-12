@@ -15,7 +15,7 @@ const showCommunity = async (req, res) => {
     let posts
     //params의 type값이 hot이면 인기게시물 순으로, 아니면 최신게시물 순으로 포스트 불러옴
     if (type == "hot"){
-      posts = await Post.find({}).sort({ views: -1 });
+      posts = await Post.find({}).sort({ ups: -1 });
     }else{
       posts = await Post.find({}).sort({ createdAt: -1 });
     }
@@ -116,14 +116,36 @@ const addComment = async (req, res) => {
   res.status(200).json({post, user})
 };
 
-// const updateUps = async (req, res) => {
-//   const postId = req.params.id;
-//   const post = await Post.findOne({ _id: postId });
-//   post.ups = post.ups + 1;
-//   post.save();
+const updateUps = async (req, res) => {
+  try {
+    const token = req.cookies.token;
+    const decoded = jwt.verify(token, jwtSecret);
+    const userId = decoded.tokenId;
+    const postId = req.params.id;
 
-//   return res.status(201).redirect(`/community/${postId}`);
-// };
+    const post = await Post.findById(postId);
+    if (!post) {
+      return res.status(404).json({ message: 'Post not found' });
+    }
+
+    if (post.likedBy.includes(userId)) {
+      // 사용자가 이미 좋아요를 누른 경우
+      post.ups -= 1;
+      post.likedBy.pull(userId);  // 사용자를 likedBy 배열에서 제거
+    } else {
+      // 사용자가 좋아요를 누르지 않은 경우
+      post.ups += 1;
+      post.likedBy.push(userId);  // 사용자를 likedBy 배열에 추가
+    }
+
+    await post.save();
+
+    return res.status(201).json({ post });
+  } catch (error) {
+    console.error('Error updating ups:', error);
+    return res.status(500).json({ message: 'Server error' });
+  }
+};
 
 // const updateDowns = async (req, res) => {
 //   const postId = req.params.id;
@@ -258,7 +280,7 @@ module.exports = {
   showCommunity,
   seePost,
   addComment,
-  // updateUps,
+  updateUps,
   // updateDowns,
   postAddPost,
   getUpdatePost,

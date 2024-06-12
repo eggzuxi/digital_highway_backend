@@ -9,7 +9,7 @@ const {
   showCommunity,
   seePost,
   addComment,
-  // updateUps,
+  updateUps,
   // updateDowns,
   postAddPost,
   getUpdatePost,
@@ -32,11 +32,11 @@ router.route("/:id")
 .get(seePost);
 router
   .route("/:id/updatePost")
-  // .all(checkLogin)
+  .all(checkLogin)
   .get(getUpdatePost)
   .put(updatePost);
-router.route("/:id/deletePost").delete(deletePost);
+router.route("/:id/deletePost").all(checkLogin).delete(deletePost);
 router.route("/:id/addComment").all(checkLogin).post(addComment);
-// router.route("/:id/updateUps").all(checkLogin).put(updateUps);
+router.route("/:id/updateUps").all(checkLogin).put(updateUps);
 // router.route("/:id/updateDowns").all(checkLogin).put(updateDowns);
 module.exports = router;
