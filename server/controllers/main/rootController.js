@@ -1,14 +1,9 @@
 const User = require("../../models/User");
+const Mypage = require("../../models/myPage")
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
 const jwtSecret = process.env.JWT_SECRET;
-
-// // @desc Show login
-// // @route Get /
-// const getLogin = (req, res) => {
-//   res.render("home");
-// };
 
 // @desc Login user
 // @route Post /
@@ -32,30 +27,26 @@ const postLogin = async (req, res) => {
   res.status(200).json({message:"로그인성공"})
 };
 
-// const getJoin = (req, res) => {
-//   res.status(200).render("join");
-// };
-
 // @desc Join user
 // @route Post /join
 const postJoin = async (req, res) => {
   const { userName, userID, password, password2, phoneNum } = req.body;
-
-  // //react파일에서 패스워드 확인해서 주석처리했습니다.
-  // if (password !== password2) {
-  //   return res.send("패스워드를 다시 확인해주세요.");
-  // }
   const hashedPassword = await bcrypt.hash(password, 10);
-  const user = await User.create({ userName:userName, userID, password: hashedPassword, phoneNum:phoneNum});
-  res.json(user)
+  const user = await User.create({ userName:userName, userID:userID, password: hashedPassword, phoneNum:phoneNum});
+  await Mypage.create({userID: user._id, myPost:[], myComments:[], bookmarks:[]});
+  res.status(200).json(user)
 };
 
 // @desc Logout user
-// @route Get /logout
-const getLogout = (req, res) => {
-  res.clearCookie("token");
-  res.json("로그아웃")
-  // res.redirect("/");
+// @route Post /logout
+const postLogout = async (req, res) => {
+  try{
+    res.clearCookie('token',{path:'/', domain: 'localhost', secure:false, httpOnly:true});
+    res.status(200).json({success:true, message:'로그아웃 완료'});
+  }catch(err){
+    console.error('로그아웃오류',err);
+    res.status(500).json({message:'로그아웃 중 오류발생'})
+  }  
 };
 
-module.exports = { postLogin, postJoin, getLogout };
+module.exports = { postLogin, postJoin, postLogout };

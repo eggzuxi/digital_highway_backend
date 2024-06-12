@@ -6,13 +6,11 @@ const { imageUpload } = require("../../middlewares/imageUpload");
 
 /* Controllers */
 const {
-  showMain,
+  showCommunity,
   seePost,
   addComment,
   updateUps,
-  updateDowns,
-  showMyPage,
-  getAddPost,
+  // updateDowns,
   postAddPost,
   getUpdatePost,
   updatePost,
@@ -21,21 +19,24 @@ const {
 
 const router = express.Router();
 
-router.route("/").all(checkLogin).get(showMain);
-router.route("/myPage").all(checkLogin).get(showMyPage);
+router.route("/").get(showCommunity);
+
 router
   .route("/addPost")
   .all(checkLogin)
-  .get(getAddPost)
-  .post(imageUpload.single("image"), postAddPost);
-router.route("/:id").all(checkLogin).get(seePost);
+  // .get(getAddPost)
+  .post(postAddPost);
+
+router.route("/:id")
+// .all(checkLogin)
+.get(seePost);
 router
   .route("/:id/updatePost")
   .all(checkLogin)
   .get(getUpdatePost)
-  .put(imageUpload.single("image"), updatePost);
+  .put(updatePost);
 router.route("/:id/deletePost").all(checkLogin).delete(deletePost);
 router.route("/:id/addComment").all(checkLogin).post(addComment);
 router.route("/:id/updateUps").all(checkLogin).put(updateUps);
-router.route("/:id/updateDowns").all(checkLogin).put(updateDowns);
+// router.route("/:id/updateDowns").all(checkLogin).put(updateDowns);
 module.exports = router;

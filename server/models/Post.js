@@ -16,6 +16,14 @@ const PostSchema = new mongoose.Schema({
     required: true,
   },
 
+ // 댓글 내용
+  comments: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Comment",
+    },
+  ],
+
 
   // 작성자
   writer: {
@@ -44,12 +52,12 @@ const PostSchema = new mongoose.Schema({
     default: 0,
   },
 
-
-  // 싫어요 비추천
-  downs: {
-    type: Number,
-    default: 0,
-  },
+  likedBy:[
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
+  ]
 });
 
 const Post = db.model("Post", PostSchema);
