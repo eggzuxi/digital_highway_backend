@@ -1,11 +1,10 @@
-const multer = require("multer");
-
 require("dotenv").config();
 const jwt = require("jsonwebtoken");
 const jwtSecret = process.env.JWT_SECRET;
 const Post = require("../../models/Post");
 const Comment = require("../../models/Comment");
 const User = require("../../models/User")
+const Image = require("../../models/images")
 
 // @desc Show main page
 // @route Get /main
@@ -62,8 +61,6 @@ const seePost = async (req, res) => {
         }
       })
     );
-
-    
 
     // Find the user associated with the post writer ID
     const user = await User.findById(post.writer);
@@ -175,20 +172,25 @@ const postAddPost = async (req, res) => {
       return res.status(401).json({ message: "유효하지 않은 사용자입니다." });
     }
 
-    const { file } = req;
+    const uploadedImages = [];
 
-    let imageUrl = "";
-    if (file) {
-      const path = file.path;
-      imageUrl = path.substr(6);
+    for (const file of req.files){
+      const newImage = new Image({
+        name: file.originalname,
+        url:file.location,
+      });
+      await newImage.save();
+      uploadedImages.push({name: file.originalname, url:file.location});
     }
+
+    console.log(uploadedImages)
 
     const newPost = await Post.create({
       title,
       mainText,
       writer: userId,
-      imageUrl,
-      tags, // 태그 추가
+      imageUrl: uploadedImages.map(img => img.url),
+      tags:tags, // 태그 추가
     });
     console.log("새 포스트 생성:", newPost);
 
@@ -202,6 +204,7 @@ const postAddPost = async (req, res) => {
     res.status(500).json({ message: "서버 오류" });
   }
 };
+
 //업데이트할 글 불러오기
 const getUpdatePost = async (req, res) => {
   try {
@@ -234,18 +237,25 @@ const updatePost = async (req, res) => {
       return res.status(400).json({ message: 'Title and main text are required' });
     }
 
-    const { file } = req;
-    let imageUrl;
-    if (file) {
-      const path = file.path;
-      imageUrl = path.substr(6);
+    const uploadedImages = [];
+
+    for (const file of req.files){
+      const newImage = new Image({
+        name: file.originalname,
+        url:file.location,
+      });
+      await newImage.save();
+      uploadedImages.push({name: file.originalname, url:file.location});
     }
+
+    console.log(uploadedImages)
+    
 
     const updatedPost = await Post.findByIdAndUpdate(postId, {
       title,
       mainText,
-      imageUrl: file ? imageUrl : "",
-      tags,
+      imageUrl: uploadedImages.map(img => img.url),
+      tags:tags,
     }, { new: true });
 
     if (!updatedPost) {
@@ -266,8 +276,42 @@ const deletePost = async (req, res) => {
   try {
     // 댓글 삭제
     await Comment.deleteMany({ post: postId });
+
+    // 포스트를 삭제하기 전에 포스트를 찾고 관련된 사용자 ID를 가져옴
+    const post = await Post.findById(postId);
+    if (!post) {
+      return res.status(404).json({ message: 'Post not found' });
+    }
+    const userId = post.writer;
+
+    // 이미지 삭제
+    for (const imageUrl of post.imageUrl) {
+      // imageUrl로 이미지를 삭제하는 작업을 구현해야 합니다.
+      // 예시: S3에서 이미지 삭제
+      // await deleteImageFromS3(imageUrl);
+      
+      // Image 모델에서도 삭제
+      await Image.findOneAndDelete({ url: imageUrl });
+    }
+
     // 포스트 삭제
     await Post.findByIdAndDelete(postId);
+
+    // 사용자 모델에서 posts 배열에서 해당 포스트 ID 제거
+    await User.updateOne(
+      { _id: userId },
+      { $pull: { posts: postId } }
+    );
+
+    // 사용자 모델에서 comments 배열에서 해당 포스트와 관련된 댓글 ID 제거
+    // 모든 댓글을 삭제한 후에 해당 댓글 ID들을 가져와서 사용자 모델에서 제거
+    const comments = await Comment.find({ post: postId });
+    const commentIds = comments.map(comment => comment._id);
+    await User.updateMany(
+      {},
+      { $pull: { comments: { $in: commentIds } } }
+    );
+
     res.status(200).json({ message: 'Post deleted successfully' });
   } catch (error) {
     console.error('Error deleting post:', error);
