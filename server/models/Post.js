@@ -16,6 +16,10 @@ const PostSchema = new mongoose.Schema({
     required: true,
   },
 
+  tags:{
+    type:String
+  },
+
  // 댓글 내용
   comments: [
     {
@@ -24,6 +28,11 @@ const PostSchema = new mongoose.Schema({
     },
   ],
 
+  //이미지 url
+  imageUrl:
+  [
+    {type: String}
+  ],
 
   // 작성자
   writer: {
