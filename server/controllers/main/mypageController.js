@@ -109,4 +109,26 @@ const getMypage = async (req, res) => {
   }
 };
 
-module.exports = {showUserPage, updatePw, updateTel, getMypage}
+// ID 찾기 함수 추가
+const findUserId = async (req, res) => {
+  const { userName, phoneNum } = req.body;
+  try {
+    console.log('Searching for user:', { userName, phoneNum });
+    const user = await User.findOne({ userName, phoneNum });
+    console.log('Query result:', user);
+    if (user) {
+      console.log('User found:', user);
+      res.json({ userID: user.userID });
+    } else {
+      console.log('User not found');
+      res.status(404).json({ message: '사용자를 찾을 수 없습니다.' });
+    }
+  } catch (error) {
+    console.error('Error during user search:', error);
+    res.status(500).json({ message: '서버 오류가 발생했습니다.' });
+  }
+};
+
+
+
+module.exports = {showUserPage, updatePw, updateTel, getMypage, findUserId}
