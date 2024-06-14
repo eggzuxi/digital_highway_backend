@@ -5,6 +5,7 @@ const Post = require("../../models/Post");
 const Comment = require("../../models/Comment");
 const User = require("../../models/User")
 const Image = require("../../models/images")
+const Mypage = require("../../models/myPage");
 
 // @desc Show main page
 // @route Get /main
@@ -102,15 +103,15 @@ const addComment = async (req, res) => {
   });
 
   // 유저가 작성한 코멘트 배열에 추가
-  const user = await User.findOne({ _id: userId });
-  user.comments.unshift(newComment._id);
-  await user.save();
+  const mypage = await Mypage.findOne({ userID: userId });
+  mypage.myComments.unshift(newComment._id);
+  await mypage.save();
 
   // 포스트의 코멘트 배열에 추가
   const post = await Post.findOne({ _id: postId });
   post.comments.unshift(newComment._id);
   await post.save();
-  res.status(200).json({post, user})
+  res.status(200).json({post, mypage})
 };
 
 const updateUps = async (req, res) => {
@@ -194,9 +195,9 @@ const postAddPost = async (req, res) => {
     });
     console.log("새 포스트 생성:", newPost);
 
-    const user = await User.findOne({ _id: userId });
-    user.posts.unshift(newPost);
-    await user.save();
+    const mypage = await Mypage.findOne({ userID: userId });
+    mypage.myPost.unshift(newPost);
+    await mypage.save();
 
     res.status(201).json({ message: "포스트 생성 완료" });
   } catch (err) {

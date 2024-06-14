@@ -1,5 +1,7 @@
 const Mypage = require("../../models/myPage");
 const User = require("../../models/User");
+const Post = require("../../models/Post")
+const Comment = require("../../models/Comment")
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
 const jwtSecret = process.env.JWT_SECRET
@@ -69,14 +71,42 @@ const updateTel = async(req,res)=>{
   }
 }
 
-const getMypage = async(req,res)=>{
+const getMypage = async (req, res) => {
   const token = req.cookies.token;
-  if (!token){
+  if (!token) {
     return res.json(null);
   }
-  const {tokenId} = jwt.verify(token, jwtSecret);
-  const mark = await Mypage.findOne({userID:tokenId});
-  res.json(mark)
+  
+  try {
+    const { tokenId } = jwt.verify(token, jwtSecret);
+    
+    // 사용자의 마이페이지 정보 조회
+    const mark = await Mypage.findOne({ userID: tokenId });
+    const posts = await Post.find({ writer: tokenId });
+    let comments = await Comment.find({ writer: tokenId });
+    
+    // comments 안의 각 comment에 대해 post 필드 값으로 Post 문서 찾기
+    comments = await Promise.all(comments.map(async (comment) => {
+      const post = await Post.findById(comment.post);
+      const commentObject = comment.toObject();
+      if (post) {
+        commentObject.postTitle = post.title; // 임시로 postTitle 필드 추가
+      }
+      return commentObject;
+    }));
+    console.log(comments)
+    // 응답으로 보낼 데이터 객체 생성
+    const responseData = {
+      mark: mark,
+      posts: posts,
+      comments: comments
+    };
+    // 응답 전송
+    res.json(responseData);
+  } catch (error) {
+    console.error('Error fetching user data:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
 };
 
 module.exports = {showUserPage, updatePw, updateTel, getMypage}
