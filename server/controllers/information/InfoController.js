@@ -9,25 +9,41 @@ const jwt = require("jsonwebtoken");
 const jwtSecret = process.env.JWT_SECRET
 
 const getHealthPage = asyncHandler(async(req, res) => {
-  const posts = await health.find();
+  const posts = await health.find({}).sort({ date: -1 });
   res.json(posts)
   // res.render("healthInfo", {posts:posts});
 })
 
 const getCulturePage = asyncHandler(async(req, res) => {
-  const posts = await culture.find();
+  const posts = await culture.find({}).sort({ date: -1 });
   res.json(posts)
   // res.render("culInfo", {posts:posts});
 })
 
-const getFinancePage = asyncHandler(async(req, res) => {
-  const posts = await finance.find();
-  res.json(posts)
-  // res.render("finInfo", {posts:posts});
-})
+const getFinancePage = asyncHandler(async (req, res) => {
+  const posts = await finance.find({});
+
+  // 문자열 형식의 날짜를 JavaScript Date 객체로 변환한 후 정렬
+  const sortedPosts = posts.sort((a, b) => {
+    const dateA = new Date(a.date.replace('.', '-').replace('.', '-').replace(' ', ''));
+    const dateB = new Date(b.date.replace('.', '-').replace('.', '-').replace(' ', ''));
+    return dateB - dateA; // 내림차순 정렬
+  });
+
+  // 날짜 형식을 'YYYY-MM-DD'로 변환
+  const formattedPosts = sortedPosts.map(post => {
+    const date = new Date(post.date.replace('.', '-').replace('.', '-').replace(' ', ''));
+    const formattedDate = date.toISOString().split('T')[0]; // 'YYYY-MM-DD' 형식으로 변환
+    return { ...post.toObject(), date: formattedDate }; // 새 객체를 만들어 날짜 형식을 변경
+  });
+
+  res.json(formattedPosts);
+  // res.render("finInfo", {posts: formattedPosts});
+});
+
 
 const getCareerPage = asyncHandler(async(req, res) => {
-  const posts = await career.find();
+  const posts = await career.find({}).sort({ date: -1 });
   res.json(posts)
   // res.render("carInfo", {posts:posts});
 })
